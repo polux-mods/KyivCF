@@ -1,0 +1,24 @@
+# Gradle / Android
+.gradle/
+build/
+*/build/
+
+# Local machine files
+local.properties
+.idea/
+*.iml
+.DS_Store
+
+# Android generated files
+captures/
+.externalNativeBuild/
+.cxx/
+
+# Build outputs
+*.apk
+*.aab
+*.ap_
+*.dex
+
+# Logs
+*.log

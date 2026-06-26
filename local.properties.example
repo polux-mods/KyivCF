@@ -1,0 +1,5 @@
+# Android Studio створює local.properties автоматично.
+# Цей файл не потрібен для API тривог і залишений тільки як приклад.
+# local.properties не заливай у GitHub.
+
+# sdk.dir=/path/to/Android/Sdk
