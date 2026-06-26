@@ -42,6 +42,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -58,6 +59,7 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Density
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -105,8 +107,32 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             MaterialTheme {
-                KyivTransportCloneApp()
+                ReferenceScaledContent {
+                    KyivTransportCloneApp()
+                }
             }
+        }
+    }
+}
+
+
+private const val ReferenceWidthPx = 691f
+
+@Composable
+private fun ReferenceScaledContent(content: @Composable () -> Unit) {
+    val realDensity = LocalDensity.current
+
+    BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
+        val screenWidthPx = with(realDensity) { maxWidth.toPx() }
+        val referenceScale = (screenWidthPx / ReferenceWidthPx).coerceAtLeast(0.1f)
+
+        CompositionLocalProvider(
+            LocalDensity provides Density(
+                density = referenceScale,
+                fontScale = 1f
+            )
+        ) {
+            content()
         }
     }
 }
@@ -150,7 +176,8 @@ private fun MainDashboard(
     val navBottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
 
     BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
-        val panelHeight = maxHeight - 455.dp
+        val referencePanelTop = 768.dp
+        val panelHeight = maxHeight - referencePanelTop
         val safePanelHeight = if (panelHeight < 360.dp) maxHeight * 0.56f else panelHeight
 
         Column(
@@ -166,7 +193,7 @@ private fun MainDashboard(
         ServiceCarousel(
             modifier = Modifier
                 .align(Alignment.TopStart)
-                .padding(top = statusTop + 405.dp),
+                .padding(top = statusTop + 448.dp),
             onPaymentClick = onPaymentClick
         )
 
@@ -187,7 +214,7 @@ private fun TopChipsRow() {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 40.dp, vertical = 18.dp),
+            .padding(start = 40.dp, end = 40.dp, top = 27.dp, bottom = 9.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         ChipCloud()
